@@ -1,8 +1,8 @@
-=======================================
+#=======================================
 # ${FQDN}
 #---------------------------------------
 
-<VirtualHost *:80>
+<VirtualHost *:8080>
 	ServerAdmin webmaster@example.com
 	DocumentRoot $DOCUMENTROOT
 	ServerName $FQDN
@@ -31,7 +31,7 @@ SSLStaplingResponderTimeout 5
 SSLStaplingReturnResponderErrors off
 SSLStaplingCache shmcb:/var/run/ocsp(128000)
 
-<VirtualHost *:443>
+<VirtualHost *:8443>
 	Protocols h2 http/1.1
 	ServerAdmin webmaster@example.com
 	DocumentRoot $DOCUMENTROOT

@@ -14,15 +14,14 @@ RUN : \
         && apk upgrade \
         && apk add --no-cache --virtual .user shadow \
         && groupadd -g 1001 www \
-        && useradd -d $HTTPD_PREFIX -s /bin/nologin -g www -m -u 1001 httpd \
+        && useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
         && groupadd -g 1000 kusanagi \
-        && useradd -d /home/kusanagi -s /bin/nologin -g kusanagi -G www -u 1000 -m kusanagi \
+        && useradd -d /home/kusanagi -s /bin/false -g kusanagi -G www -u 1000 -m kusanagi \
         && chmod 755 /home/kusanagi \
         && apk del --purge .user \
         && mkdir /tmp/build \
         && : # END of RUN
 
-WORKDIR $HTTPD_PREFIX
 
 RUN :\
 	&& APACHE_DIST_URLS=' \
@@ -39,7 +38,8 @@ RUN :\
 		$runDeps \
 		ca-certificates \
 		coreutils \
-		dpkg-dev dpkg \
+		dpkg-dev \
+		dpkg \
 		gcc \
 		gnupg \
 		libc-dev \
@@ -49,11 +49,15 @@ RUN :\
 		lua-dev \
 		make \
 		nghttp2-dev \
+		nghttp2-libs \
 		openssl \
 		openssl-dev \
+		brotli \
+		brotli-dev \
 		pcre-dev \
 		tar \
 		zlib-dev \
+		gettext \
 	&& cd /tmp \
 	&& ddist() { \
 		local f="$1"; shift; \
@@ -99,11 +103,14 @@ RUN :\
 		--enable-unique-id \
 		--enable-xml2enc \
 		--enable-proxy-html \
-		--with-nghttp2=/usr \
-		--with-ssl=/usr \
 		--enable-so \
 		--enable-deflate \
+		--enable-brotli \
 		--enable-suexec \
+		--with-z=/usr \
+		--with-brotli=/usr \
+		--with-nghttp2=/usr \
+		--with-ssl=/usr \
 		--with-mpm=event \
 		--sysconfdir=/etc/httpd \
 		--includedir=/usr/include/httpd \
@@ -112,21 +119,27 @@ RUN :\
 	&& make -j "$(nproc)" \
 	&& make install  \
 	&& cd .. \
-	&& rm -rf src \
+	&& rm -rf src $HTTPD_PREFIX/man $HTTPD_PREFIX/manual $HTTPD_PREFIX/icons \
+	&& mv /usr/bin/envsubst /tmp \
 	&& runDeps="$runDeps $( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+		scanelf --needed --nobanner --format '%n#p' --recursive /tmp/envsubst /usr/local /etc/httpd \
 			| tr ',' '\n' \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --virtual .httpd-rundeps $runDeps \
+	&& apk add --virtual .httpd-rundeps $runDeps openssl \
 	&& apk del .build-deps \
+	&& mv /tmp/envsubst /usr/bin \
 	&& httpd -v \
-	&& mkdir -p /etc/httpd/conf.d /etc/httpd/modules.d \
+	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
+	&& mkdir -p -m 750 $HTTPDIR \
+	&& chown -R httpd:www /etc/httpd /var/www/html /tmp/httpd /etc/hosts \
 	&& : # END OF RUN
 
-
-COPY files/httpd /etc
+COPY files/httpd/ /etc/
+COPY files/httpd/httpd.conf /etc/httpd/
+COPY files/httpd/conf.d/ /etc/httpd/conf.d/
+COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 
 ARG MICROSCANNER_TOKEN
 RUN if [ x${MICROSCANNER_TOKEN} != x ] ; then \
@@ -145,6 +158,7 @@ VOLUME /home/kusanagi
 VOLUME /etc/letsencrypt
 
 USER httpd
+WORKDIR $HTTPD_PREFIX
 COPY files/docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "httpd", "-DFOREGROUND" ]

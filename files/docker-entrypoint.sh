@@ -1,7 +1,5 @@
 #!/bin/sh
 
-export PATH=/usr/local/bin:/bin:/usr/bin:/usr/sbin
-
 function env2cert {
     file=$1
     var="$2"
@@ -26,6 +24,7 @@ if [ ! -e /etc/httpd/dhparam.key ] ; then
 fi
 
 KUSANAGI_PROVISION=${KUSANAGI_PROVISION:-lamp}
+
 #//---------------------------------------------------------------------------
 #// generate httpd configuration file
 #//---------------------------------------------------------------------------
@@ -33,12 +32,12 @@ cd /etc/httpd/conf.d \
 && env FQDN=${FQDN:-localhost.localdomain} \
     DOCUMENTROOT=${DOCUMENTROOT:-/var/www/html} \
     KUSANAGI_PROVISION=${KUSANAGI_PROVISION} \
-    NO_SSL_REDIRECT=${NO_SSL_REDIRECT:-off} \
-    USE_SSL_CT=${USE_SSL_CT:-off} \
-    USE_SSL_OSCP=${USE_SSL_OSCP:-off} \
-    NO_USE_SSLST=${NO_USE_SSLST:-off} \
     SSL_CERT=${SSL_CERT:-/etc/httpd/localhost.crt} \
     SSL_KEY=${SSL_KEY:-/etc/httpd/localhost.key} \
+    USE_SSL_CT=${USE_SSL_CT} \
+    USE_SSL_OSCP=${USE_SSL_OSCP} \
+    NO_SSL_REDIRECT=$([ $NO_SSL_REDIRECT -gt 0 2> /dev/null ] && echo off|| echo on ) \
+    NO_USE_SSLST=$([ $NO_USE_SSLST -gt 0 2> /dev/null ] && echo \# ) \
     /usr/bin/envsubst '$$FQDN $$DOCUMENTROOT $$NO_SSL_REDIRECT 
     $$USE_SSL_CT $$USE_SSL_CT $$USE_SSL_OSCP  $$NO_USE_SSLST
     $$SSL_CERT $$SSL_KEY $$KUSANAGI_PROVISION' \
@@ -62,6 +61,10 @@ ${FQDN}
 root@${FQDN}
 	EOF
 fi
+
+#sed -i "s/^\(127.0.0.1.*\)\$/\1 $FQDN/" /etc/hosts || \
+#	 (sed "s/\(^127.0.0.1.*$\)/\1 $FQDN/" /etc/hosts > /tmp/hosts && \
+#	   cat /tmp/hosts > /etc/hosts && rm /tmp/hosts)
 
 #//---------------------------------------------------------------------------
 #// execute httpd

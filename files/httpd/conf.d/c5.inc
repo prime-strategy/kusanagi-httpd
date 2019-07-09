@@ -1,4 +1,4 @@
-LocationMatch "/(login|index.php/login|index.php/dashboard*|index.php/install*)">
+<LocationMatch "/(login|index.php/login|index.php/dashboard*|index.php/install*)">
 	Order deny,allow
 	Deny from all
 	Allow from all
