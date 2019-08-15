@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.10
+FROM alpine:edge
 MAINTAINER kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.39
@@ -140,6 +140,7 @@ COPY files/httpd/ /etc/
 COPY files/httpd/httpd.conf /etc/httpd/
 COPY files/httpd/conf.d/ /etc/httpd/conf.d/
 COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
+COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
 
 ARG MICROSCANNER_TOKEN
 RUN if [ x${MICROSCANNER_TOKEN} != x ] ; then \

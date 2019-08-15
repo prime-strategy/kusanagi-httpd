@@ -23,7 +23,9 @@ if [ ! -e /etc/httpd/dhparam.key ] ; then
     test -f /etc/httpd/dhparam.key || openssl dhparam 2048 > /etc/httpd/dhparam.key 2> /dev/null
 fi
 
-KUSANAGI_PROVISION=${KUSANAGI_PROVISION:-lamp}
+NO_SSL_REDIRECT=${NO_SSL_REDIRECT:-0}
+NO_USE_NAXSI=${NO_USE_NAXSI:-1}
+NO_USE_SSLST=${NO_USE_SSLST:-1}
 
 #//---------------------------------------------------------------------------
 #// generate httpd configuration file
@@ -31,16 +33,18 @@ KUSANAGI_PROVISION=${KUSANAGI_PROVISION:-lamp}
 cd /etc/httpd/conf.d \
 && env FQDN=${FQDN:-localhost.localdomain} \
     DOCUMENTROOT=${DOCUMENTROOT:-/var/www/html} \
-    KUSANAGI_PROVISION=${KUSANAGI_PROVISION} \
+    KUSANAGI_PROVISION=${KUSANAGI_PROVISION:-lamp} \
     SSL_CERT=${SSL_CERT:-/etc/httpd/localhost.crt} \
     SSL_KEY=${SSL_KEY:-/etc/httpd/localhost.key} \
-    USE_SSL_CT=${USE_SSL_CT} \
-    USE_SSL_OSCP=${USE_SSL_OSCP} \
+    USE_SSL_CT=${USE_SSL_CT:-Off} \
+    USE_SSL_OSCP=${USE_SSL_OSCP:-Off} \
     NO_SSL_REDIRECT=$([ $NO_SSL_REDIRECT -gt 0 2> /dev/null ] && echo off|| echo on ) \
-    NO_USE_SSLST=$([ $NO_USE_SSLST -gt 0 2> /dev/null ] && echo \# ) \
+    NO_USE_NAXSI=$([ $NO_USE_NAXSI -gt 0 2> /dev/null ] && echo \# || echo -n ) \
+    NO_USE_SSLST=$([ $NO_USE_SSLST -gt 0 2> /dev/null ] && echo \# || echo -n ) \
+	NAXSI_APP=$(test $KUSANAGI_PROVISION = wp && echo wp || echo general ) \
     /usr/bin/envsubst '$$FQDN $$DOCUMENTROOT $$NO_SSL_REDIRECT 
     $$USE_SSL_CT $$USE_SSL_CT $$USE_SSL_OSCP  $$NO_USE_SSLST
-    $$SSL_CERT $$SSL_KEY $$KUSANAGI_PROVISION' \
+    $$NAXSI_APP $$SSL_CERT $$SSL_KEY $$KUSANAGI_PROVISION $$NO_USE_NAXSI' \
     < default.template > default.conf \
 || exit 1
 

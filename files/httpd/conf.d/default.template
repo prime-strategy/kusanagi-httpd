@@ -9,8 +9,8 @@
 	ErrorLog  /proc/self/fd/2
 	CustomLog /proc/self/fd/1 kusanagi env=!no_log
 	<IfModule mod_security2.c>
-		#IncludeOptional modsecurity.d/kusanagi_activated_rules/wordpress/*.conf
-		#SecAuditLog /proc/self/fd/2
+		${NO_USE_NAXSI}IncludeOptional modsecurity.d/kusanagi_activated_rules/${NAXSI_APP}/*.conf
+		${NO_USE_NAXSI}SecAuditLog /proc/self/fd/2
 	</IfModule>
 	<Directory "$DOCUMENTROOT">
 		Require all granted
@@ -48,8 +48,8 @@ SSLStaplingCache shmcb:/var/run/ocsp(128000)
 	downgrade-1.0 force-response-1.0
 	${NO_USE_SSLST}Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 	<IfModule mod_security2.c>
-		#IncludeOptional modsecurity.d/kusanagi_activated_rules/wordpress/*.conf
-		#SecAuditLog /proc/self/fd/2
+		${NO_USE_NAXSI}IncludeOptional modsecurity.d/kusanagi_activated_rules/${NAXSI_APP}/*.conf
+		${NO_USE_NAXSI}SecAuditLog /proc/self/fd/2
 	</IfModule>
 	<Directory "${DOCUMENTROOT}">
 		Require all granted
