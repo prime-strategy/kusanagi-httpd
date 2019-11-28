@@ -41,7 +41,7 @@ cd /etc/httpd/conf.d \
     NO_SSL_REDIRECT=$([ $NO_SSL_REDIRECT -gt 0 2> /dev/null ] && echo off|| echo on ) \
     NO_USE_NAXSI=$([ $NO_USE_NAXSI -gt 0 2> /dev/null ] && echo \# || echo -n ) \
     NO_USE_SSLST=$([ $NO_USE_SSLST -gt 0 2> /dev/null ] && echo \# || echo -n ) \
-	NAXSI_APP=$(test $KUSANAGI_PROVISION = wp && echo wp || echo general ) \
+	NAXSI_APP=$([ "x$KUSANAGI_PROVISION" = "xwp" ] && echo wp || echo general ) \
     /usr/bin/envsubst '$$FQDN $$DOCUMENTROOT $$NO_SSL_REDIRECT 
     $$USE_SSL_CT $$USE_SSL_CT $$USE_SSL_OSCP  $$NO_USE_SSLST
     $$NAXSI_APP $$SSL_CERT $$SSL_KEY $$KUSANAGI_PROVISION $$NO_USE_NAXSI' \
