@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:edge
+FROM alpine:3.11
 MAINTAINER kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.41
@@ -22,6 +22,7 @@ RUN : \
         && mkdir /tmp/build \
         && : # END of RUN
 
+COPY files/httpd_luajit.patch /tmp/
 
 RUN :\
 	&& APACHE_DIST_URLS=' \
@@ -46,7 +47,8 @@ RUN :\
 		curl-dev \
 		jansson-dev \
 		libxml2-dev \
-		lua-dev \
+		lua5.3-dev \
+		luajit-dev \
 		make \
 		nghttp2-dev \
 		nghttp2-libs \
@@ -91,12 +93,15 @@ RUN :\
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
 	&& cd src \
+	&& patch -p1 < ../httpd_luajit.patch \
 	&& ./configure \
 		--enable-modules=all \
 		--enable-mods-shared=all \
 		--enable-proxy-fdpass \
 		--enable-mpms-shared='prefork worker event' \
 		--enable-lua \
+		--with-lua=/usr/lua5.3 \
+		--enable-luajit \
 		--enable-sed \
 		--enable-http2 \
 		--enable-ssl \
@@ -127,7 +132,7 @@ RUN :\
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --virtual .httpd-rundeps $runDeps openssl \
+	&& apk add --virtual .httpd-rundeps $runDeps openssl luajit \
 	&& apk del .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
 	&& httpd -v \

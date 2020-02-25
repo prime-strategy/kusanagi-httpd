@@ -1,0 +1,24 @@
+--- httpd-2.4.41/configure.orig	2019-08-30 12:25:13.125229242 +0900
++++ httpd-2.4.41/configure	2019-08-30 12:29:02.584312696 +0900
+@@ -20822,6 +20822,10 @@ if test -n "$PKGCONFIG" -a -z "$lua_path
+   LUA_VERSION="`$PKGCONFIG --modversion lua`"
+   { $as_echo "$as_me:${as_lineno-$LINENO}: using Lua $LUA_VERSION configuration from pkg-config" >&5
+ $as_echo "$as_me: using Lua $LUA_VERSION configuration from pkg-config" >&6;}
++elif test "${enable_luajit+set}" = set; then :
++  LUA_LIBS="`$PKGCONFIG --libs luajit` "
++  LUA_CFLAGS="`$PKGCONFIG --cflags luajit`"
++  LUA_VERSION="`$PKGCONFIG --modversion luajit`"
+ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pow in -lm" >&5
+ $as_echo_n "checking for pow in -lm... " >&6; }
+@@ -21793,7 +21797,10 @@ if test "${enable_luajit+set}" = set; th
+ 
+   if test "x$MOD_CPPFLAGS" = "x"; then
+     test "x$silent" != "xyes" && echo "  setting MOD_CPPFLAGS to \""-DAP_ENABLE_LUAJIT"\""
++    enable_lua=yes
+     MOD_CPPFLAGS=""-DAP_ENABLE_LUAJIT""
++    LUA_LIBS="`$PKGCONFIG --libs luajit` "
++    LUA_CFLAGS="`$PKGCONFIG --cflags luajit`"
+   else
+     apr_addto_bugger=""-DAP_ENABLE_LUAJIT""
+     for i in $apr_addto_bugger; do
