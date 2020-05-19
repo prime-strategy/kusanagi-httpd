@@ -4,8 +4,8 @@
 FROM alpine:3.11
 MAINTAINER kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.41
-ENV HTTPD_SHA256=133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40 
+ENV HTTPD_VERSION=2.4.43
+ENV HTTPD_SHA256=a497652ab3fc81318cdc2a203090a999150d86461acff97c1065dc910fe10f43
 
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
@@ -22,7 +22,7 @@ RUN : \
         && mkdir /tmp/build \
         && : # END of RUN
 
-COPY files/httpd_luajit.patch /tmp/
+COPY files/httpd_luajit.patch /tmp/build
 
 RUN :\
 	&& APACHE_DIST_URLS=' \
@@ -93,13 +93,13 @@ RUN :\
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
 	&& cd src \
-	&& patch -p1 < ../httpd_luajit.patch \
+	&& patch -p1 < /tmp/build/httpd_luajit.patch \
 	&& ./configure \
 		--enable-modules=all \
 		--enable-mods-shared=all \
 		--enable-proxy-fdpass \
 		--enable-mpms-shared='prefork worker event' \
-		--enable-lua \
+		--enable-lua=static \
 		--with-lua=/usr/lua5.3 \
 		--enable-luajit \
 		--enable-sed \
