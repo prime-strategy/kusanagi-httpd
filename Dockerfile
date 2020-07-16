@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.11
+FROM alpine:3.12
 MAINTAINER kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.43

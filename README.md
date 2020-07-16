@@ -9,6 +9,6 @@ Apache HTTP Server( for KUSANAGI Runs on Docker )
 
 # Image Content
 
-- Alpine:3.11
+- Alpine:3.12
 - httpd-2.4.43
 
