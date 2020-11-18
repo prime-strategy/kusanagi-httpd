@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.12
+FROM alpine:3.12.1
 MAINTAINER kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.46
@@ -147,17 +147,6 @@ COPY files/httpd/httpd.conf /etc/httpd/
 COPY files/httpd/conf.d/ /etc/httpd/conf.d/
 COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
-
-ARG MICROSCANNER_TOKEN
-RUN if [ x${MICROSCANNER_TOKEN} != x ] ; then \
-	apk add --no-cache --virtual .ca ca-certificates \
-	&& update-ca-certificates\
-	&& wget --no-check-certificate https://get.aquasec.com/microscanner \
-	&& chmod +x microscanner \
-	&& ./microscanner ${MICROSCANNER_TOKEN} || exit 1\
-	&& rm ./microscanner \
-	&& apk del --purge .ca ;\
-    fi
 
 EXPOSE 8080
 EXPOSE 8443

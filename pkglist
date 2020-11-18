@@ -8,7 +8,7 @@ apr-util-dev-1.6.1-r6
 apr-util-ldap-1.6.1-r6
 bash-5.0.17-r0
 blkid-2.35.2-r0
-brotli-libs-1.0.7-r5
+brotli-libs-1.0.9-r1
 busybox-1.31.1-r19
 ca-certificates-20191127-r4
 ca-certificates-bundle-20191127-r4
@@ -53,11 +53,11 @@ llvm10-10.0.0-r2
 llvm10-libs-10.0.0-r2
 lsblk-2.35.2-r0
 luajit-5.1.20190925-r0
-mariadb-common-10.4.13-r0
+mariadb-common-10.4.15-r0
 mariadb-connector-c-3.1.8-r1
 mariadb-connector-c-dev-3.1.8-r1
-mariadb-dev-10.4.13-r0
-mariadb-embedded-10.4.13-r0
+mariadb-dev-10.4.15-r0
+mariadb-embedded-10.4.15-r0
 mcookie-2.35.2-r0
 musl-1.1.24-r9
 musl-utils-1.1.24-r9
