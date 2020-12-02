@@ -153,6 +153,12 @@ EXPOSE 8443
 VOLUME /home/kusanagi
 VOLUME /etc/letsencrypt
 
+RUN apk add --no-cache --virtual .curl curl \
+    && curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh -s -- -b /usr/local/bin \
+    && trivy filesystem --exit-code 1 --no-progress / \
+    && apk del .curl \
+    && :
+
 USER httpd
 WORKDIR $HTTPD_PREFIX
 COPY files/docker-entrypoint.sh /

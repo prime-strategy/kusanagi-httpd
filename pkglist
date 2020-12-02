@@ -41,7 +41,7 @@ libintl-0.20.2-r0
 libldap-2.4.50-r0
 libldapcpp-2.4.50-r0
 libmount-2.35.2-r0
-libpq-12.4-r0
+libpq-12.5-r0
 libsasl-2.1.27-r6
 libsmartcols-2.35.2-r0
 libssl1.1-1.1.1g-r0
@@ -59,8 +59,8 @@ mariadb-connector-c-dev-3.1.8-r1
 mariadb-dev-10.4.15-r0
 mariadb-embedded-10.4.15-r0
 mcookie-2.35.2-r0
-musl-1.1.24-r9
-musl-utils-1.1.24-r9
+musl-1.1.24-r10
+musl-utils-1.1.24-r10
 ncurses-libs-6.2_p20200523-r0
 ncurses-terminfo-base-6.2_p20200523-r0
 nghttp2-libs-1.41.0-r0
@@ -70,8 +70,8 @@ openssl-dev-1.1.1g-r0
 pcre-8.44-r0
 perl-5.30.3-r0
 pkgconf-1.7.2-r0
-postgresql-dev-12.4-r0
-postgresql-libs-12.4-r0
+postgresql-dev-12.5-r0
+postgresql-libs-12.5-r0
 readline-8.0.4-r0
 scanelf-1.2.6-r0
 setpriv-2.35.2-r0
