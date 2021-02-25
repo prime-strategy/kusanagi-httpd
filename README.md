@@ -5,7 +5,7 @@ Apache HTTP Server( for KUSANAGI Runs on Docker )
 # Versions (tags)
 
 - latest
-- 2.4.46-r4
+- 2.4.46-r6
 
 # Image Content
 
