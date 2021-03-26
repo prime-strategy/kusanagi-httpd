@@ -30,8 +30,8 @@ libblkid-2.36.1-r1
 libbz2-1.0.8-r1
 libc-utils-0.7.2-r3
 libcap-ng-0.8.2-r0
-libcrypto1.1-1.1.1j-r0
-libcurl-7.74.0-r0
+libcrypto1.1-1.1.1k-r0
+libcurl-7.74.0-r1
 libeconf-0.3.8-r0
 libfdisk-2.36.1-r1
 libffi-3.3-r2
@@ -43,7 +43,7 @@ libmount-2.36.1-r1
 libpq-13.2-r0
 libsasl-2.1.27-r10
 libsmartcols-2.36.1-r1
-libssl1.1-1.1.1j-r0
+libssl1.1-1.1.1k-r0
 libstdc++-10.2.1_pre1-r3
 libtls-standalone-2.9.1-r1
 libuuid-2.36.1-r1
@@ -64,8 +64,8 @@ ncurses-libs-6.2_p20210109-r0
 ncurses-terminfo-base-6.2_p20210109-r0
 nghttp2-libs-1.42.0-r1
 openldap-dev-2.4.57-r1
-openssl-1.1.1j-r0
-openssl-dev-1.1.1j-r0
+openssl-1.1.1k-r0
+openssl-dev-1.1.1k-r0
 partx-2.36.1-r1
 pcre-8.44-r0
 pcre2-10.36-r0

@@ -34,8 +34,8 @@ cd /etc/httpd/conf.d \
 && env FQDN=${FQDN:-localhost.localdomain} \
     DOCUMENTROOT=${DOCUMENTROOT:-/var/www/html} \
     KUSANAGI_PROVISION=${KUSANAGI_PROVISION:-lamp} \
-    SSL_CERT=${SSL_CERT:-/etc/httpd/localhost.crt} \
-    SSL_KEY=${SSL_KEY:-/etc/httpd/localhost.key} \
+    SSL_CERT=${SSL_CERT:-/etc/httpd/default.crt} \
+    SSL_KEY=${SSL_KEY:-/etc/httpd/default.key} \
     USE_SSL_CT=${USE_SSL_CT:-Off} \
     USE_SSL_OSCP=${USE_SSL_OSCP:-Off} \
     NO_SSL_REDIRECT=$([ $NO_SSL_REDIRECT -gt 0 2> /dev/null ] && echo off|| echo on ) \
@@ -48,14 +48,14 @@ cd /etc/httpd/conf.d \
     < default.template > default.conf \
 || exit 1
 
-if [ -f /etc/httpd/localhost.key -o -f /etc/httpd/localhost.crt ]; then
+if [ -f /etc/httpd/default.key -o -f /etc/httpd/default.crt ]; then
 	/bin/true
 else
-	openssl genrsa -rand /proc/cpuinfo:/proc/dma:/proc/filesystems:/proc/interrupts:/proc/ioports:/proc/uptime 2048 > /etc/httpd/localhost.key 2> /dev/null
+	openssl genrsa -rand /proc/cpuinfo:/proc/dma:/proc/filesystems:/proc/interrupts:/proc/ioports:/proc/uptime 2048 > /etc/httpd/default.key 2> /dev/null
 
-	cat <<-EOF | openssl req -new -key /etc/httpd/localhost.key \
+	cat <<-EOF | openssl req -new -key /etc/httpd/default.key \
 		-x509 -sha256 -days 365 -set_serial 1 -extensions v3_req \
-		-out /etc/httpd/localhost.crt 2>/dev/null
+		-out /etc/httpd/default.crt 2>/dev/null
 --
 SomeState
 SomeCity

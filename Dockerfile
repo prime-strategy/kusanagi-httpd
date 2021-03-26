@@ -1,35 +1,31 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.13.2
+FROM alpine:3.13.3
 MAINTAINER kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.46
 ENV HTTPD_SHA256=740eddf6e1c641992b22359cabc66e6325868c3c5e2e3f98faf349b61ecf41ea
-
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
+
+COPY files/httpd_luajit.patch /tmp
 RUN : \
-        && apk update \
-        && apk upgrade \
-        && apk add --no-cache --virtual .user shadow \
-        && groupadd -g 1001 www \
-        && useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
-        && groupadd -g 1000 kusanagi \
-        && useradd -d /home/kusanagi -s /bin/false -g kusanagi -G www -u 1000 -m kusanagi \
-        && chmod 755 /home/kusanagi \
-        && apk del --purge .user \
-        && mkdir /tmp/build \
-        && : # END of RUN
-
-COPY files/httpd_luajit.patch /tmp/build
-
-RUN :\
+    && apk update \
+    && apk upgrade openssl \
+    && apk add --no-cache --virtual .user shadow \
+    && groupadd -g 1001 www \
+    && useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
+    && groupadd -g 1000 kusanagi \
+    && useradd -d /home/kusanagi -s /bin/false -g kusanagi -G www -u 1000 -m kusanagi \
+    && chmod 755 /home/kusanagi \
+    && apk del --purge .user \
+    && mkdir /tmp/build \
 	&& APACHE_DIST_URLS=' \
-	https://www.apache.org/dyn/closer.cgi?action=download&filename= \
-	https://www-us.apache.org/dist/  \
-	https://www.apache.org/dist/  \
-	https://archive.apache.org/dist/' \
+	    https://www.apache.org/dyn/closer.cgi?action=download&filename= \
+	    https://www-us.apache.org/dist/  \
+	    https://www.apache.org/dist/  \
+	    https://archive.apache.org/dist/' \
 	&& runDeps=' \
 		apr-dev \
 		apr-util-dev \
@@ -94,7 +90,8 @@ RUN :\
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
 	&& cd src \
-	&& patch -p1 < /tmp/build/httpd_luajit.patch \
+	&& patch -p1 < /tmp/httpd_luajit.patch \
+    && rm /tmp/httpd_luajit.patch \
 	&& ./configure \
 		--enable-modules=all \
 		--enable-mods-shared=all \
@@ -121,7 +118,6 @@ RUN :\
 		--sysconfdir=/etc/httpd \
 		--includedir=/usr/include/httpd \
 		--libexecdir=/etc/httpd/modules \
-		--with-installbuilddir=/lib/httpd/build \
 	&& make -j "$(nproc)" \
 	&& make install  \
 	&& cd .. \
@@ -136,6 +132,8 @@ RUN :\
 	&& apk add --virtual .httpd-rundeps $runDeps openssl luajit \
 	&& apk del .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
+    && cd /tmp \
+    && rm -rf /tmp/build \
 	&& httpd -v \
 	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
 	&& mkdir -p -m 750 $HTTPDIR \
