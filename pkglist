@@ -1,6 +1,6 @@
 alpine-baselayout-3.2.0-r8
 alpine-keys-2.2-r0
-apk-tools-2.12.1-r0
+apk-tools-2.12.4-r0
 apr-1.7.0-r0
 apr-dev-1.7.0-r0
 apr-util-1.6.1-r7
@@ -9,7 +9,7 @@ apr-util-ldap-1.6.1-r7
 bash-5.1.0-r0
 blkid-2.36.1-r1
 brotli-libs-1.0.9-r3
-busybox-1.32.1-r3
+busybox-1.32.1-r5
 ca-certificates-20191127-r5
 ca-certificates-bundle-20191127-r5
 cfdisk-2.36.1-r1
@@ -79,7 +79,7 @@ setpriv-2.36.1-r1
 sfdisk-2.36.1-r1
 sqlite-dev-3.34.1-r0
 sqlite-libs-3.34.1-r0
-ssl_client-1.32.1-r3
+ssl_client-1.32.1-r5
 util-linux-2.36.1-r1
 util-linux-dev-2.36.1-r1
 xz-libs-5.2.5-r0
