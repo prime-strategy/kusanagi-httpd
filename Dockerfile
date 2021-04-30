@@ -4,28 +4,26 @@
 FROM alpine:3.13.5
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.46
-ENV HTTPD_SHA256=740eddf6e1c641992b22359cabc66e6325868c3c5e2e3f98faf349b61ecf41ea
+ENV HTTPD_VERSION=2.4.47
+ENV HTTPD_SHA256=23d006dbc8e578116a1138fa457eea824048458e89c84087219f0372880c03ca
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
 
-COPY files/httpd_luajit.patch /tmp
 RUN : \
-    && apk update \
-    && apk upgrade openssl \
-    && apk add --no-cache --virtual .user shadow \
-    && groupadd -g 1001 www \
-    && useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
-    && groupadd -g 1000 kusanagi \
-    && useradd -d /home/kusanagi -s /bin/false -g kusanagi -G www -u 1000 -m kusanagi \
-    && chmod 755 /home/kusanagi \
-    && apk del --purge .user \
-    && mkdir /tmp/build \
+	&& apk update \
+	&& apk add --no-cache --virtual .user shadow \
+	&& groupadd -g 1001 www \
+	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
+	&& groupadd -g 1000 kusanagi \
+	&& useradd -d /home/kusanagi -s /bin/false -g kusanagi -G www -u 1000 -m kusanagi \
+	&& chmod 755 /home/kusanagi \
+	&& apk del --purge .user \
+	&& mkdir /tmp/build \
 	&& APACHE_DIST_URLS=' \
-	    https://www.apache.org/dyn/closer.cgi?action=download&filename= \
-	    https://www-us.apache.org/dist/  \
-	    https://www.apache.org/dist/  \
-	    https://archive.apache.org/dist/' \
+		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
+		https://www-us.apache.org/dist/  \
+		https://www.apache.org/dist/  \
+		https://archive.apache.org/dist/' \
 	&& runDeps=' \
 		apr-dev \
 		apr-util-dev \
@@ -33,12 +31,13 @@ RUN : \
 		perl ' \
 	&& apk add --no-cache --virtual .build-deps \
 		$runDeps \
+		binutils \
 		ca-certificates \
 		coreutils \
 		dpkg-dev \
 		dpkg \
 		gcc \
-        patch \
+		patch \
 		gnupg \
 		libc-dev \
 		curl-dev \
@@ -90,15 +89,13 @@ RUN : \
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
 	&& cd src \
-	&& patch -p1 < /tmp/httpd_luajit.patch \
-    && rm /tmp/httpd_luajit.patch \
 	&& ./configure \
+		LIBS='-lluajit-5.1' \
 		--enable-modules=all \
 		--enable-mods-shared=all \
 		--enable-proxy-fdpass \
 		--enable-mpms-shared='prefork worker event' \
 		--enable-lua=static \
-		--with-lua=/usr/lua5.3 \
 		--enable-luajit \
 		--enable-sed \
 		--enable-http2 \
@@ -111,6 +108,8 @@ RUN : \
 		--enable-brotli \
 		--enable-suexec \
 		--with-z=/usr \
+		--with-lua=/usr/lua5.3 \
+		--with-luajit=/usr \
 		--with-brotli=/usr \
 		--with-nghttp2=/usr \
 		--with-ssl=/usr \
@@ -132,13 +131,14 @@ RUN : \
 	&& apk add --virtual .httpd-rundeps $runDeps openssl luajit \
 	&& apk del .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
-    && cd /tmp \
-    && rm -rf /tmp/build \
+	&& cd /tmp \
+	&& rm -rf /tmp/build \
 	&& httpd -v \
 	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
 	&& mkdir -p -m 750 $HTTPDIR \
 	&& chown -R httpd:www /etc/httpd /var/www/html /tmp/httpd /etc/hosts \
-	&& : # END OF RUN
+	&& :
+
 
 COPY files/httpd/ /etc/
 COPY files/httpd/httpd.conf /etc/httpd/
@@ -146,16 +146,18 @@ COPY files/httpd/conf.d/ /etc/httpd/conf.d/
 COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
 
+RUN : \
+	&& apk add --no-cache --virtual .curl curl \
+	&& TRIVY_VERSION=0.16.0 \
+	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v$TRIVY_VERSION \
+	&& /usr/local/bin/trivy filesystem --exit-code 1 --no-progress --skip-dirs /var / \
+	&& apk del .curl \
+	&& :
+
 EXPOSE 8080
 EXPOSE 8443
 VOLUME /home/kusanagi
 VOLUME /etc/letsencrypt
-
-RUN apk add --no-cache --virtual .curl curl \
-    && curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh -s -- -b /usr/local/bin \
-    && trivy filesystem --exit-code 1 --no-progress / \
-    && apk del .curl \
-    && :
 
 USER httpd
 WORKDIR $HTTPD_PREFIX
