@@ -145,12 +145,13 @@ COPY files/httpd/httpd.conf /etc/httpd/
 COPY files/httpd/conf.d/ /etc/httpd/conf.d/
 COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
+COPY files/docker-entrypoint.sh /
 
 RUN : \
 	&& apk add --no-cache --virtual .curl curl \
-	&& TRIVY_VERSION=0.16.0 \
-	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v$TRIVY_VERSION \
-	&& /usr/local/bin/trivy filesystem --exit-code 1 --no-progress --skip-dirs /var / \
+	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin \
+	&& /usr/local/bin/trivy filesystem --exit-code 1 --no-progress / \
+    && rm /usr/local/bin/trivy \
 	&& apk del .curl \
 	&& :
 
@@ -161,6 +162,5 @@ VOLUME /etc/letsencrypt
 
 USER httpd
 WORKDIR $HTTPD_PREFIX
-COPY files/docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "httpd", "-DFOREGROUND" ]

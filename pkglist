@@ -40,7 +40,7 @@ libintl-0.20.2-r2
 libldap-2.4.57-r1
 libldapcpp-2.4.57-r1
 libmount-2.36.1-r1
-libpq-13.2-r0
+libpq-13.3-r0
 libsasl-2.1.27-r10
 libsmartcols-2.36.1-r1
 libssl1.1-1.1.1k-r0
@@ -72,8 +72,8 @@ pcre-8.44-r0
 pcre2-10.36-r0
 perl-5.32.0-r0
 pkgconf-1.7.3-r0
-postgresql-dev-13.2-r0
-postgresql-libs-13.2-r0
+postgresql-dev-13.3-r0
+postgresql-libs-13.3-r0
 readline-8.1.0-r0
 scanelf-1.2.8-r0
 setpriv-2.36.1-r1
