@@ -4,8 +4,8 @@
 FROM alpine:3.13.5
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.47
-ENV HTTPD_SHA256=23d006dbc8e578116a1138fa457eea824048458e89c84087219f0372880c03ca
+ENV HTTPD_VERSION=2.4.48
+ENV HTTPD_SHA256=740eddf6e1c641992b22359cabc66e6325868c3c5e2e3f98faf349b61ecf41ea
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
 
@@ -104,7 +104,6 @@ RUN : \
 		--enable-xml2enc \
 		--enable-proxy-html \
 		--enable-so \
-		--enable-deflate \
 		--enable-brotli \
 		--enable-suexec \
 		--with-z=/usr \
