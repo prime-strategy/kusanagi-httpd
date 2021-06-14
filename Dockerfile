@@ -11,6 +11,7 @@ ENV PATH $HTTPD_PREFIX/bin:$PATH
 
 RUN : \
 	&& apk update \
+	&& apk upgrade curl \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
