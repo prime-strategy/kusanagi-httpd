@@ -47,6 +47,7 @@ RUN : \
 		lua5.3-dev \
 		luajit-dev \
 		make \
+        mariadb-dev \
 		nghttp2-dev \
 		nghttp2-libs \
 		openssl \
