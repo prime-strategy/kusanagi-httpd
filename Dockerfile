@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.13.5
+FROM alpine:3.14.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.48
@@ -11,7 +11,7 @@ ENV PATH $HTTPD_PREFIX/bin:$PATH
 
 RUN : \
 	&& apk update \
-	&& apk upgrade curl \
+	&& apk upgrade apk-tools \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
