@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.14.0
+FROM alpine:3.14.1
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.48
@@ -11,7 +11,6 @@ ENV PATH $HTTPD_PREFIX/bin:$PATH
 
 RUN : \
 	&& apk update \
-	&& apk upgrade apk-tools \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
@@ -150,9 +149,9 @@ COPY files/docker-entrypoint.sh /
 
 RUN : \
 	&& apk add --no-cache --virtual .curl curl \
-	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin \
-	&& /usr/local/bin/trivy filesystem --exit-code 1 --no-progress / \
-    && rm /usr/local/bin/trivy \
+	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /tmp \
+	&& /tmp/trivy filesystem --skip-files /tmp/trivy --exit-code 1 --no-progress / \
+    && rm /tmp/trivy \
 	&& apk del .curl \
 	&& :
 
