@@ -1,11 +1,11 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.14.3
+FROM alpine:3.15.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.51
-ENV HTTPD_SHA256=20e01d81fecf077690a4439e3969a9b22a09a8d43c525356e863407741b838f4
+ENV HTTPD_VERSION=2.4.52
+ENV HTTPD_SHA256=0127f7dc497e9983e9c51474bed75e45607f2f870a7675a86dc90af6d572f5c9
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
 
