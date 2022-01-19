@@ -10,12 +10,12 @@ bash-5.1.8-r0
 blkid-2.37.2-r1
 brotli-libs-1.0.9-r5
 busybox-1.34.1-r3
-ca-certificates-20191127-r7
+ca-certificates-20211220-r0
 ca-certificates-bundle-20191127-r7
 cfdisk-2.37.2-r1
 cyrus-sasl-dev-2.1.27-r14
-expat-2.4.1-r0
-expat-dev-2.4.1-r0
+expat-2.4.3-r0
+expat-dev-2.4.3-r0
 findmnt-2.37.2-r1
 flock-2.37.2-r1
 gdbm-1.22-r0
