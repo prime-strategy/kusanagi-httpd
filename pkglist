@@ -14,8 +14,8 @@ ca-certificates-20211220-r0
 ca-certificates-bundle-20191127-r7
 cfdisk-2.37.4-r0
 cyrus-sasl-dev-2.1.27-r14
-expat-2.4.5-r0
-expat-dev-2.4.5-r0
+expat-2.4.7-r0
+expat-dev-2.4.7-r0
 findmnt-2.37.4-r0
 flock-2.37.4-r0
 gdbm-1.22-r0
@@ -47,7 +47,7 @@ libsodium-dev-1.0.18-r0
 libssl1.1-1.1.1l-r8
 libstdc++-10.3.1_git20211027-r0
 libuuid-2.37.4-r0
-libxml2-2.9.12-r2
+libxml2-2.9.13-r0
 linux-pam-1.5.2-r0
 logger-2.37.4-r0
 lsblk-2.37.4-r0
