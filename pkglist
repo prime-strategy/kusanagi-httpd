@@ -9,7 +9,7 @@ apr-util-ldap-1.6.1-r11
 bash-5.1.16-r0
 blkid-2.37.4-r0
 brotli-libs-1.0.9-r5
-busybox-1.34.1-r4
+busybox-1.34.1-r5
 ca-certificates-20211220-r0
 ca-certificates-bundle-20211220-r0
 cfdisk-2.37.4-r0
@@ -80,12 +80,12 @@ setpriv-2.37.4-r0
 sfdisk-2.37.4-r0
 sqlite-dev-3.36.0-r0
 sqlite-libs-3.36.0-r0
-ssl_client-1.34.1-r4
+ssl_client-1.34.1-r5
 util-linux-2.37.4-r0
 util-linux-dev-2.37.4-r0
 util-linux-misc-2.37.4-r0
 uuidgen-2.37.4-r0
 wipefs-2.37.4-r0
-xz-libs-5.2.5-r0
+xz-libs-5.2.5-r1
 zlib-1.2.12-r0
 zlib-dev-1.2.12-r0
