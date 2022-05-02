@@ -27,7 +27,7 @@ libbz2-1.0.8-r1
 libc-utils-0.7.2-r3
 libcap-ng-0.8.2-r1
 libcrypto1.1-1.1.1n-r0
-libcurl-7.80.0-r0
+libcurl-7.80.0-r1
 libeconf-0.4.2-r0
 libevent-2.1.12-r4
 libevent-dev-2.1.12-r4
@@ -87,5 +87,5 @@ util-linux-misc-2.37.4-r0
 uuidgen-2.37.4-r0
 wipefs-2.37.4-r0
 xz-libs-5.2.5-r1
-zlib-1.2.12-r0
-zlib-dev-1.2.12-r0
+zlib-1.2.12-r1
+zlib-dev-1.2.12-r1
