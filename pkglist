@@ -30,8 +30,8 @@ libgcc-11.2.1_git20220219-r2
 libintl-0.21-r2
 libldap-2.6.2-r0
 libmount-2.38-r1
-libpq-14.3-r0
-libpq-dev-14.3-r0
+libpq-14.4-r0
+libpq-dev-14.4-r0
 libsasl-2.1.28-r0
 libsmartcols-2.38-r1
 libsodium-1.0.18-r0
@@ -56,7 +56,7 @@ nghttp2-libs-1.47.0-r0
 openldap-dev-2.6.2-r0
 openssl-1.1.1o-r0
 openssl-dev-1.1.1o-r0
-pcre2-10.39-r0
+pcre2-10.40-r0
 perl-5.34.1-r0
 pkgconf-1.8.0-r0
 python3-3.10.4-r0
