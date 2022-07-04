@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM alpine:3.16.0
+FROM --platform=$BUILDPLATFORM alpine:3.16.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.54
@@ -136,7 +136,7 @@ RUN : \
 	&& httpd -v \
 	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
 	&& mkdir -p -m 750 $HTTPDIR \
-	&& chown -R httpd:www /etc/httpd /var/www/html /tmp/httpd /etc/hosts \
+	&& chown -R httpd:www /etc/httpd /var/www/html /tmp/httpd \
 	&& :
 
 
