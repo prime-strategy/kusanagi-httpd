@@ -4,10 +4,10 @@ Apache HTTP Server( for KUSANAGI Runs on Docker )
 
 # Versions (tags)
 
-- 2.4.54-r4
+- 2.4.54-r5
 
 # Image Content
 
-- Alpine:3.16.1
+- Alpine:3.16.2
 - httpd-2.4.54
 
