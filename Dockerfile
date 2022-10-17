@@ -10,7 +10,6 @@ ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
 
 RUN : \
-	&& apk update \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
@@ -42,11 +41,11 @@ RUN : \
 		libc-dev \
 		curl-dev \
 		jansson-dev \
-		libxml2-dev \
+		libxml2-dev=2.9.14-r2 \
 		lua5.3-dev \
 		luajit-dev \
 		make \
-        mariadb-dev \
+		mariadb-dev \
 		nghttp2-dev \
 		nghttp2-libs \
 		openssl \
