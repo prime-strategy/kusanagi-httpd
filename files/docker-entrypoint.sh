@@ -4,7 +4,7 @@ function env2cert {
     file=$1
     var="$2"
     (echo "$var" | sed 's/"//g' | grep '^-----' > /dev/null) && 
-    (echo "$var" | sed -e 's/"//g' -e 's/\r//g' | sed -e 's/- /-\n/' -e 's/ -/\n-/' | sed -e '2s/ /\n/g' > $file) && 
+    (echo "$var" | sed -e 's/"//g' -e 's/\r//g' | sed -e 's/- /-\n/' -e 's/ -/\n-/' | sed -e '2s/ /\n/g' > $file) &&
     echo -n $file || echo -n
 }
 
@@ -16,11 +16,28 @@ function env2cert {
 #//---------------------------------------------------------------------------
 # Improv Sec
 if [ ! -e /etc/httpd/ssl_sess_ticket.key ] ; then
-	openssl rand 48 > /etc/httpd/ssl_sess_ticket.key
+    openssl rand 48 > /etc/httpd/ssl_sess_ticket.key
 fi
 if [ ! -e /etc/httpd/dhparam.key ] ; then
     env2cert /etc/httpd/dhparam.key "$SSL_DHPARAM" > /dev/null
     test -f /etc/httpd/dhparam.key || openssl dhparam 2048 > /etc/httpd/dhparam.key 2> /dev/null
+fi
+
+# Generate localhost.crt and localhost.key
+if [[ ! -e /etc/httpd/localhost.key \
+    && ! -e /etc/httpd/localhost.cert ]]; then
+    keyfile=$(mktemp /tmp/k_ssl_key.XXXXXX)
+    certfile=$(mktemp /tmp/k_ssl_cert.XXXXXX)
+    trap "rm -f ${keyfile} ${certfile}" SIGINT
+    (echo --; echo SomeState; echo SomeCity; echo SomeOrganization; \
+     echo SomeOrganizationalUnit; echo localhost.localdomain; \
+     echo root@localhost.localdomain) | \
+    openssl req -newkey rsa:2048 -keyout "${keyfile}" -nodes -x509 \
+                -days 365 -out "${certfile}"
+    mv "${keyfile}" /etc/httpd/localhost.key
+    chmod 0600 /etc/httpd/localhost.key
+    mv "${certfile}" /etc/httpd/localhost.crt
+    chmod 0644 /etc/httpd/localhost.crt
 fi
 
 NO_SSL_REDIRECT=${NO_SSL_REDIRECT:-0}
