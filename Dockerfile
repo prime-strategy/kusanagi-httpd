@@ -41,7 +41,7 @@ RUN : \
 		libc-dev \
 		curl-dev \
 		jansson-dev \
-		libxml2-dev=2.9.14-r2 \
+		libxml2-dev \
 		lua5.3-dev \
 		luajit-dev \
 		make \
