@@ -33,7 +33,7 @@ if [[ ! -e /etc/httpd/localhost.key \
      echo SomeOrganizationalUnit; echo localhost.localdomain; \
      echo root@localhost.localdomain) | \
     openssl req -newkey rsa:2048 -keyout "${keyfile}" -nodes -x509 \
-                -days 365 -out "${certfile}"
+                -days 365 -out "${certfile}" 2> /dev/null
     mv "${keyfile}" /etc/httpd/localhost.key
     chmod 0600 /etc/httpd/localhost.key
     mv "${certfile}" /etc/httpd/localhost.crt
@@ -58,7 +58,7 @@ cd /etc/httpd/conf.d \
     NO_SSL_REDIRECT=$([ $NO_SSL_REDIRECT -gt 0 2> /dev/null ] && echo off|| echo on ) \
     NO_USE_NAXSI=$([ $NO_USE_NAXSI -gt 0 2> /dev/null ] && echo \# || echo -n ) \
     NO_USE_SSLST=$([ $NO_USE_SSLST -gt 0 2> /dev/null ] && echo \# || echo -n ) \
-	NAXSI_APP=$([ "x$KUSANAGI_PROVISION" = "xwp" ] && echo wp || echo general ) \
+    NAXSI_APP=$([ "x$KUSANAGI_PROVISION" = "xwp" ] && echo wp || echo general ) \
     /usr/bin/envsubst '$$FQDN $$DOCUMENTROOT $$NO_SSL_REDIRECT 
     $$USE_SSL_CT $$USE_SSL_CT $$USE_SSL_OSCP  $$NO_USE_SSLST
     $$NAXSI_APP $$SSL_CERT $$SSL_KEY $$KUSANAGI_PROVISION $$NO_USE_NAXSI' \
@@ -66,21 +66,10 @@ cd /etc/httpd/conf.d \
 || exit 1
 
 if [ -f /etc/httpd/default.key -o -f /etc/httpd/default.crt ]; then
-	/bin/true
+    /bin/true
 else
-	openssl genrsa -rand /proc/cpuinfo:/proc/dma:/proc/filesystems:/proc/interrupts:/proc/ioports:/proc/uptime 2048 > /etc/httpd/default.key 2> /dev/null
-
-	cat <<-EOF | openssl req -new -key /etc/httpd/default.key \
-		-x509 -sha256 -days 365 -set_serial 1 -extensions v3_req \
-		-out /etc/httpd/default.crt 2>/dev/null
---
-SomeState
-SomeCity
-SomeOrganization
-SomeOrganizationalUnit
-${FQDN}
-root@${FQDN}
-	EOF
+    cp /etc/httpd/localhost.key /etc/httpd/default.key
+    cp /etc/httpd/localhost.crt /etc/httpd/default.crt
 fi
 
 #sed -i "s/^\(127.0.0.1.*\)\$/\1 $FQDN/" /etc/hosts || \
