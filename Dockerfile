@@ -39,7 +39,7 @@ RUN : \
 		patch \
 		gnupg \
 		libc-dev \
-		curl-dev \
+		curl-dev=7.87.0-r2 \
 		jansson-dev \
 		libxml2-dev \
 		lua5.3-dev \
