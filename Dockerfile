@@ -18,6 +18,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
+	&& CURL_VERSIOH=7.88.1-r1 \
+	&& OPENSSL_VERSION=3.0.8-r1 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -39,7 +41,8 @@ RUN : \
 		patch \
 		gnupg \
 		libc-dev \
-		curl-dev=7.88.1-r0 \
+		curl=$CURL_VERSIOH \
+		curl-dev=$CURL_VERSIOH \
 		jansson-dev \
 		libxml2-dev \
 		lua5.3-dev \
@@ -48,8 +51,8 @@ RUN : \
 		mariadb-dev \
 		nghttp2-dev \
 		nghttp2-libs \
-		openssl \
-		openssl-dev \
+		openssl=$OPENSSL_VERSION \
+		openssl-dev=$OPENSSL_VERSION \
 		brotli \
 		brotli-dev \
 		pcre2-dev \
