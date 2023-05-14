@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.17.3
+FROM --platform=$BUILDPLATFORM alpine:3.18.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.57
@@ -18,8 +18,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSIOH=8.0.1-r0 \
-	&& OPENSSL_VERSION=3.0.8-r4 \
+	&& CURL_VERSIOH=8.0.1-r2 \
+	&& OPENSSL_VERSION=3.1.0-r4 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
