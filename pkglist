@@ -39,8 +39,8 @@ libldap-2.6.5-r0
 libmount-2.38.1-r8
 libncursesw-6.4_p20230506-r0
 libpanelw-6.4_p20230506-r0
-libpq-15.3-r0
-libpq-dev-15.3-r0
+libpq-15.4-r0
+libpq-dev-15.4-r0
 libsasl-2.1.28-r4
 libsmartcols-2.38.1-r8
 libsodium-1.0.18-r3
