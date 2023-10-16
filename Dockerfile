@@ -8,7 +8,9 @@ ENV HTTPD_VERSION=2.4.57
 ENV HTTPD_SHA256=4d1e0a274ee90bdfb5f38d4a7d73a7367ed1c6388e26280e640014e49abc0df03683705b88dcfe2ec2da313dda4c7b4a3b86daffa1911f58e224eba89d82d155
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
+ENV FQDN localhost
 
+WORKDIR /tmp
 RUN : \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
@@ -18,7 +20,7 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSIOH=8.3.0-r0 \
+	&& CURL_VERSIOH=8.4.0-r0 \
 	&& OPENSSL_VERSION=3.1.3-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
@@ -59,14 +61,13 @@ RUN : \
 		tar \
 		zlib-dev \
 		gettext \
-	&& cd /tmp \
 	&& ddist() { \
 		local f="$1"; shift; \
 		local distFile="$1"; shift; \
 		local success=; \
 		local distUrl=; \
 		for distUrl in $APACHE_DIST_URLS; do \
-			if wget -O "$f" "$distUrl$distFile" && [ -s "$f" ]; then \
+			if curl -4Lo "$f" "$distUrl$distFile" && [ -s "$f" ]; then \
 				success=1; \
 				break; \
 			fi; \
@@ -91,37 +92,35 @@ RUN : \
 	&& mkdir -p src \
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
-	&& cd src \
-	&& ./configure \
-		LIBS='-lluajit-5.1' \
-		--enable-modules=all \
-		--enable-mods-shared=all \
-		--enable-proxy-fdpass \
-		--enable-mpms-shared='prefork worker event' \
-		--enable-lua=static \
-		--enable-luajit \
-		--enable-sed \
-		--enable-http2 \
-		--enable-ssl \
-		--enable-unique-id \
-		--enable-xml2enc \
-		--enable-proxy-html \
-		--enable-so \
-		--enable-brotli \
-		--enable-suexec \
-		--with-z=/usr \
-		--with-lua=/usr/lua5.3 \
-		--with-luajit=/usr \
-		--with-brotli=/usr \
-		--with-nghttp2=/usr \
-		--with-ssl=/usr \
-		--with-mpm=event \
-		--sysconfdir=/etc/httpd \
-		--includedir=/usr/include/httpd \
-		--libexecdir=/etc/httpd/modules \
-	&& make -j "$(nproc)" \
-	&& make install  \
-	&& cd .. \
+	&& (cd src \
+		&& ./configure \
+			LIBS='-lluajit-5.1' \
+			--enable-modules=all \
+			--enable-mods-shared=all \
+			--enable-proxy-fdpass \
+			--enable-mpms-shared='prefork worker event' \
+			--enable-lua=static \
+			--enable-luajit \
+			--enable-sed \
+			--enable-http2 \
+			--enable-ssl \
+			--enable-unique-id \
+			--enable-xml2enc \
+			--enable-proxy-html \
+			--enable-so \
+			--enable-brotli \
+			--enable-suexec \
+			--with-z=/usr \
+			--with-lua=/usr/lua5.3 \
+			--with-luajit=/usr \
+			--with-brotli=/usr \
+			--with-nghttp2=/usr \
+			--with-ssl=/usr \
+			--with-mpm=event \
+			--sysconfdir=/etc/httpd \
+			--includedir=/usr/include/httpd \
+			--libexecdir=/etc/httpd/modules \
+		&& make -j "$(nproc)" install ) \
 	&& rm -rf src $HTTPD_PREFIX/man $HTTPD_PREFIX/manual $HTTPD_PREFIX/icons \
 	&& mv /usr/bin/envsubst /tmp \
 	&& runDeps="$runDeps $( \
@@ -130,10 +129,9 @@ RUN : \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --virtual .httpd-rundeps $runDeps openssl luajit \
-	&& apk del .build-deps \
+	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit curl \
+	&& apk del --purge .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
-	&& cd /tmp \
 	&& rm -rf /tmp/build \
 	&& httpd -v \
 	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
@@ -164,5 +162,6 @@ VOLUME /etc/letsencrypt
 
 USER httpd
 WORKDIR $HTTPD_PREFIX
+HEALTHCHECK --interval=10s --timeout=3s CMD curl -kf https://$FQDN:8443/ > /dev/null  || exit 1
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "httpd", "-DFOREGROUND" ]
