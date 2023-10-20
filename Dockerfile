@@ -4,8 +4,8 @@
 FROM --platform=$BUILDPLATFORM alpine:3.18.3
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.57
-ENV HTTPD_SHA256=4d1e0a274ee90bdfb5f38d4a7d73a7367ed1c6388e26280e640014e49abc0df03683705b88dcfe2ec2da313dda4c7b4a3b86daffa1911f58e224eba89d82d155
+ENV HTTPD_VERSION=2.4.58
+ENV HTTPD_SHA256=fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
 ENV HTTPD_PREFIX /usr/local/apache2
 ENV PATH $HTTPD_PREFIX/bin:$PATH
 ENV FQDN localhost
@@ -162,6 +162,6 @@ VOLUME /etc/letsencrypt
 
 USER httpd
 WORKDIR $HTTPD_PREFIX
-HEALTHCHECK --interval=10s --timeout=3s CMD curl -kf https://$FQDN:8443/ > /dev/null  || exit 1
+HEALTHCHECK --interval=10s --timeout=3s CMD curl -f http://localhost:8080/server-info > /dev/null  || exit 1
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "httpd", "-DFOREGROUND" ]

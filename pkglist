@@ -12,6 +12,7 @@ busybox-1.36.1-r2
 busybox-binsh-1.36.1-r2
 ca-certificates-20230506-r0
 ca-certificates-bundle-20230506-r0
+curl-8.4.0-r0
 cyrus-sasl-dev-2.1.28-r4
 expat-2.5.0-r1
 expat-dev-2.5.0-r1
