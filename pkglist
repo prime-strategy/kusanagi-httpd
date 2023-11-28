@@ -50,7 +50,7 @@ libssl3-3.1.4-r1
 libstdc++-12.2.1_git20220924-r10
 libunistring-1.1-r1
 libuuid-2.38.1-r8
-libxml2-2.11.4-r0
+libxml2-2.11.6-r0
 lua5.3-libs-5.3.6-r5
 luajit-2.1_p20230410-r1
 mariadb-common-10.11.5-r0
@@ -67,7 +67,7 @@ openldap-dev-2.6.5-r0
 openssl-3.1.4-r1
 openssl-dev-3.1.4-r1
 pcre2-10.42-r1
-perl-5.36.1-r2
+perl-5.36.2-r0
 pkgconf-1.9.5-r0
 pyc-0.1-r0
 python3-3.11.6-r0
