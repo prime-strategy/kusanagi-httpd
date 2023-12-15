@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.18.4
+FROM --platform=$BUILDPLATFORM alpine:3.19.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.58
@@ -20,8 +20,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSIOH=8.4.0-r0 \
-	&& OPENSSL_VERSION=3.1.4-r1 \
+	&& CURL_VERSION=8.5.0-r0 \
+	&& OPENSSL_VERSION=3.1.4-r2 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -43,8 +43,8 @@ RUN : \
 		patch \
 		gnupg \
 		libc-dev \
-		curl=$CURL_VERSIOH \
-		curl-dev=$CURL_VERSIOH \
+		curl=$CURL_VERSION \
+		curl-dev=$CURL_VERSION \
 		jansson-dev \
 		libxml2-dev \
 		lua5.3-dev \
@@ -121,15 +121,16 @@ RUN : \
 			--includedir=/usr/include/httpd \
 			--libexecdir=/etc/httpd/modules \
 		&& make -j "$(nproc)" install ) \
+	&& grep -rl ELF $HTTPD_PREFIX/bin | xargs strip \
 	&& rm -rf src $HTTPD_PREFIX/man $HTTPD_PREFIX/manual $HTTPD_PREFIX/icons \
 	&& mv /usr/bin/envsubst /tmp \
-	&& runDeps="$runDeps $( \
+	&& runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /tmp/envsubst /usr/local /etc/httpd \
 			| tr ',' '\n' \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit curl \
+	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit curl perl \
 	&& apk del --purge .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
 	&& rm -rf /tmp/build \
