@@ -21,7 +21,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.5.0-r0 \
-	&& OPENSSL_VERSION=3.1.4-r2 \
+	&& OPENSSL_VERSION=3.1.4-r3 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -135,9 +135,9 @@ RUN : \
 	&& mv /tmp/envsubst /usr/bin \
 	&& rm -rf /tmp/build \
 	&& httpd -v \
-	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d /var/www/html /tmp/httpd " \
+	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d  /etc/ssl/httpd /var/www/html /tmp/httpd" \
 	&& mkdir -p -m 750 $HTTPDIR \
-	&& chown -R httpd:www /etc/httpd /var/www/html /tmp/httpd \
+	&& chown -R httpd:www /etc/httpd /etc/ssl/httpd /var/www/html /tmp/httpd \
 	&& :
 
 
