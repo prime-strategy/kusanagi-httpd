@@ -34,6 +34,7 @@ RUN : \
 		perl ' \
 	&& apk add --no-cache --virtual .build-deps \
 		$runDeps \
+		busybox=1.36.1-r16 \
 		binutils \
 		ca-certificates \
 		coreutils \
