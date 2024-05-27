@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.19.1
+FROM --platform=$BUILDPLATFORM alpine:3.20.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.59
@@ -20,8 +20,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.5.0-r0 \
-	&& OPENSSL_VERSION=3.1.4-r6 \
+	&& CURL_VERSION=8.7.1-r0 \
+	&& OPENSSL_VERSION=3.3.0-r2 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -34,7 +34,6 @@ RUN : \
 		perl ' \
 	&& apk add --no-cache --virtual .build-deps \
 		$runDeps \
-		busybox=1.36.1-r16 \
 		binutils \
 		ca-certificates \
 		coreutils \
