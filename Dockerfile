@@ -21,7 +21,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.7.1-r0 \
-	&& OPENSSL_VERSION=3.3.0-r2 \
+	&& OPENSSL_VERSION=3.3.1-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -34,6 +34,7 @@ RUN : \
 		perl ' \
 	&& apk add --no-cache --virtual .build-deps \
 		$runDeps \
+		busybox=1.36.1-r29 \
 		binutils \
 		ca-certificates \
 		coreutils \
