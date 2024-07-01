@@ -6,9 +6,9 @@ LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.59
 ENV HTTPD_SHA256=ec51501ec480284ff52f637258135d333230a7d229c3afa6f6c2f9040e321323
-ENV HTTPD_PREFIX /usr/local/apache2
-ENV PATH $HTTPD_PREFIX/bin:$PATH
-ENV FQDN localhost
+ENV HTTPD_PREFIX=/usr/local/apache2
+ENV PATH=$HTTPD_PREFIX/bin:$PATH
+ENV FQDN=localhost
 
 WORKDIR /tmp
 RUN : \
@@ -20,8 +20,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.7.1-r0 \
-	&& OPENSSL_VERSION=3.3.1-r0 \
+	&& CURL_VERSION=8.8.0-r0 \
+	&& OPENSSL_VERSION=3.3.1-r1 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
