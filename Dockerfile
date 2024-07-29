@@ -4,7 +4,7 @@
 FROM --platform=$BUILDPLATFORM alpine:3.20.1
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.61
+ENV HTTPD_VERSION=2.4.62
 ENV HTTPD_SHA256=674188e7bf44ced82da8db522da946849e22080d73d16c93f7f4df89e25729ec
 ENV HTTPD_PREFIX=/usr/local/apache2
 ENV PATH=$HTTPD_PREFIX/bin:$PATH
@@ -20,7 +20,7 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.8.0-r0 \
+	&& CURL_VERSION=8.9.0-r0 \
 	&& OPENSSL_VERSION=3.3.1-r3 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
