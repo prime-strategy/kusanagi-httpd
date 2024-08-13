@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.20.1
+FROM --platform=$BUILDPLATFORM alpine:3.20.2
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.62
@@ -34,7 +34,6 @@ RUN : \
 		perl ' \
 	&& apk add --no-cache --virtual .build-deps \
 		$runDeps \
-		busybox=1.36.1-r29 \
 		binutils \
 		ca-certificates \
 		coreutils \
