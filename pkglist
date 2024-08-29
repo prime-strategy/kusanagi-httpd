@@ -10,12 +10,11 @@ busybox-binsh-1.36.1-r29
 c-ares-1.28.1-r0
 ca-certificates-20240705-r0
 ca-certificates-bundle-20240705-r0
-curl-8.9.0-r0
 gdbm-1.23-r1
 jansson-2.14-r4
 libbz2-1.0.8-r6
 libcrypto3-3.3.1-r3
-libcurl-8.9.0-r0
+libcurl-8.9.1-r0
 libexpat-2.6.2-r0
 libgcc-13.2.1_git20240309-r0
 libidn2-2.3.7-r0

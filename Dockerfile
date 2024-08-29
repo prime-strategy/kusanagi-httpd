@@ -20,7 +20,7 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.9.0-r0 \
+	&& CURL_VERSION=8.9.1-r0 \
 	&& OPENSSL_VERSION=3.3.1-r3 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
@@ -130,7 +130,7 @@ RUN : \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit curl perl \
+	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit perl \
 	&& apk del --purge .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
 	&& rm -rf /tmp/build \
