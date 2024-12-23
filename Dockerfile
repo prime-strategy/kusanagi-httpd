@@ -1,7 +1,7 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.20.3
+FROM --platform=$BUILDPLATFORM alpine:3.21.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.62
@@ -9,6 +9,7 @@ ENV HTTPD_SHA256=674188e7bf44ced82da8db522da946849e22080d73d16c93f7f4df89e25729e
 ENV HTTPD_PREFIX=/usr/local/apache2
 ENV PATH=$HTTPD_PREFIX/bin:$PATH
 ENV FQDN=localhost
+COPY files/lua_vmprep.patch /tmp/
 
 WORKDIR /tmp
 RUN : \
@@ -21,7 +22,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.11.1-r0 \
-	&& OPENSSL_VERSION=3.3.2-r1 \
+	&& OPENSSL_VERSION=3.3.2-r4 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -60,6 +61,7 @@ RUN : \
 		tar \
 		zlib-dev \
 		gettext \
+		patch \
 	&& ddist() { \
 		local f="$1"; shift; \
 		local distFile="$1"; shift; \
@@ -92,7 +94,9 @@ RUN : \
 	&& tar -xf httpd.tar.bz2 -C src --strip-components=1 \
 	&& rm httpd.tar.bz2 \
 	&& (cd src \
+		&& patch -p1 < /tmp/lua_vmprep.patch \
 		&& ./configure \
+			CFLAGS='-O2 -g -Wimplicit-function-declaration' \
 			LIBS='-lluajit-5.1' \
 			--enable-modules=all \
 			--enable-mods-shared=all \
@@ -132,7 +136,7 @@ RUN : \
 	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit perl \
 	&& apk del --purge .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
-	&& rm -rf /tmp/build \
+	&& rm -rf /tmp/build /tmp/httpd /tmp/lua_vmprep.patch \
 	&& httpd -v \
 	&& HTTPDIR="/etc/httpd/conf.d /etc/httpd/modules.d  /etc/ssl/httpd /var/www/html /tmp/httpd" \
 	&& mkdir -p -m 750 $HTTPDIR \
