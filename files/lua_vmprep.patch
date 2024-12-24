@@ -1,0 +1,13 @@
+--- a/modules/lua/lua_vmprep.c  2024-12-23 12:24:13.423742167 +0900
++++ b/modules/lua/lua_vmprep.c	2024-12-23 12:25:48.053722593 +0900
+@@ -35,6 +35,10 @@ APLOG_USE_MODULE(lua);
+ #endif
+ #endif
+ 
++#ifdef AP_ENABLE_LUAJIT
++LUALIB_API int luaopen_jit(lua_State *L);
++#endif
++
+ #if APR_HAS_THREADS
+     apr_thread_mutex_t *ap_lua_mutex;
+ #endif
