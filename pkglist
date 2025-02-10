@@ -13,8 +13,8 @@ ca-certificates-bundle-20241121-r1
 gdbm-1.24-r0
 jansson-2.14-r4
 libbz2-1.0.8-r6
-libcrypto3-3.3.2-r4
-libcurl-8.11.1-r0
+libcrypto3-3.3.2-r5
+libcurl-8.12.0-r0
 libexpat-2.6.4-r0
 libgcc-14.2.0-r4
 libidn2-2.3.7-r0
@@ -22,7 +22,7 @@ libintl-0.22.5-r0
 libldap-2.6.8-r0
 libpsl-0.21.5-r3
 libsasl-2.1.28-r8
-libssl3-3.3.2-r4
+libssl3-3.3.2-r5
 libunistring-1.2-r0
 libuuid-2.40.4-r0
 libxml2-2.13.4-r3
@@ -31,7 +31,7 @@ luajit-2.1_p20240815-r0
 musl-1.2.5-r8
 musl-utils-1.2.5-r8
 nghttp2-libs-1.64.0-r0
-openssl-3.3.2-r4
+openssl-3.3.2-r5
 pcre2-10.43-r0
 perl-5.40.1-r0
 scanelf-1.3.8-r1
