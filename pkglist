@@ -15,7 +15,7 @@ jansson-2.14-r4
 libbz2-1.0.8-r6
 libcrypto3-3.3.3-r0
 libcurl-8.12.1-r0
-libexpat-2.6.4-r0
+libexpat-2.7.0-r0
 libgcc-14.2.0-r4
 libidn2-2.3.7-r0
 libintl-0.22.5-r0
@@ -25,7 +25,7 @@ libsasl-2.1.28-r8
 libssl3-3.3.3-r0
 libunistring-1.2-r0
 libuuid-2.40.4-r0
-libxml2-2.13.4-r4
+libxml2-2.13.4-r5
 lua5.3-libs-5.3.6-r6
 luajit-2.1_p20240815-r0
 musl-1.2.5-r9
