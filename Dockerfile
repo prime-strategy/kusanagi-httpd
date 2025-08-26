@@ -1,7 +1,11 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM alpine:3.22.0
+FROM --platform=$BUILDPLATFORM golang:1.24.6-alpine3.22 AS build-go
+COPY files/httpd_check.go /tmp
+RUN go build /tmp/httpd_check.go
+
+FROM --platform=$BUILDPLATFORM alpine:3.22.1
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.65
@@ -10,6 +14,7 @@ ENV HTTPD_PREFIX=/usr/local/apache2
 ENV PATH=$HTTPD_PREFIX/bin:$PATH
 ENV FQDN=localhost
 COPY files/lua_vmprep.patch /tmp/
+COPY --from=build-go /go/httpd_check /usr/local/bin/httpd_check
 
 WORKDIR /tmp
 RUN : \
@@ -22,7 +27,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.14.1-r1 \
-	&& OPENSSL_VERSION=3.5.1-r0 \
+	&& OPENSSL_VERSION=3.5.2-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -151,13 +156,10 @@ COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
 COPY files/docker-entrypoint.sh /
 
-RUN : \
-	&& apk add --no-cache --virtual .curl curl \
-	&& curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /tmp \
-	&& /tmp/trivy filesystem --skip-files /tmp/trivy --exit-code 1 --no-progress / \
+RUN wget -q -O - https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /tmp \
+    && /tmp/trivy filesystem --skip-files /tmp/trivy --exit-code 1 --no-progress / \
     && rm /tmp/trivy \
-	&& apk del .curl \
-	&& :
+    && :
 
 EXPOSE 8080
 EXPOSE 8443
@@ -166,6 +168,6 @@ VOLUME /etc/letsencrypt
 
 USER httpd
 WORKDIR $HTTPD_PREFIX
-HEALTHCHECK --interval=10s --timeout=3s CMD curl -f http://localhost:8080/server-info > /dev/null  || exit 1
+HEALTHCHECK --interval=10s --timeout=3s CMD /usr/local/bin/httpd_check
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "httpd", "-DFOREGROUND" ]
