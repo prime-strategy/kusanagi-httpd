@@ -27,7 +27,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.14.1-r1 \
-	&& OPENSSL_VERSION=3.5.2-r0 \
+	&& OPENSSL_VERSION=3.5.3-r1 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
