@@ -26,8 +26,8 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.14.1-r1 \
-	&& OPENSSL_VERSION=3.5.3-r1 \
+	&& CURL_VERSION=8.14.1-r2 \
+	&& OPENSSL_VERSION=3.5.4-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
