@@ -18,6 +18,7 @@ COPY --from=build-go /go/httpd_check /usr/local/bin/httpd_check
 
 WORKDIR /tmp
 RUN : \
+	&& apk upgrade busybox --no-cache \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
