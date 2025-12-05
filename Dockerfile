@@ -1,15 +1,15 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM golang:1.25.4-alpine3.22 AS build-go
+FROM --platform=$BUILDPLATFORM golang:1.25.5-alpine3.23 AS build-go
 COPY files/httpd_check.go /tmp
 RUN go build /tmp/httpd_check.go
 
-FROM --platform=$BUILDPLATFORM alpine:3.22.2
+FROM --platform=$BUILDPLATFORM alpine:3.23.0
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.65
-ENV HTTPD_SHA256=58b8be97d9940ec17f7656c0c6b9f41b618aac468b894b534148e3296c53b8b3
+ENV HTTPD_VERSION=2.4.66
+ENV HTTPD_SHA256=94d7ff2b42acbb828e870ba29e4cbad48e558a79c623ad3596e4116efcfea25a
 ENV HTTPD_PREFIX=/usr/local/apache2
 ENV PATH=$HTTPD_PREFIX/bin:$PATH
 ENV FQDN=localhost
@@ -27,7 +27,7 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.14.1-r2 \
+	&& CURL_VERSION=8.17.0-r1 \
 	&& OPENSSL_VERSION=3.5.4-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
