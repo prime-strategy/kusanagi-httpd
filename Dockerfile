@@ -5,7 +5,7 @@ FROM --platform=$BUILDPLATFORM golang:1.25.5-alpine3.23 AS build-go
 COPY files/httpd_check.go /tmp
 RUN go build /tmp/httpd_check.go
 
-FROM --platform=$BUILDPLATFORM alpine:3.23.0
+FROM --platform=$BUILDPLATFORM alpine:3.23.3
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.66
@@ -28,7 +28,7 @@ RUN : \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
 	&& CURL_VERSION=8.17.0-r1 \
-	&& OPENSSL_VERSION=3.5.4-r0 \
+	&& OPENSSL_VERSION=3.5.5-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
