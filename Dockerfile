@@ -18,7 +18,10 @@ COPY --from=build-go /go/httpd_check /usr/local/bin/httpd_check
 
 WORKDIR /tmp
 RUN : \
-	&& apk upgrade busybox --no-cache \
+	&& apk upgrade --no-cache \
+		busybox \
+		zlib\
+		openssl \
 	&& apk add --no-cache --virtual .user shadow \
 	&& groupadd -g 1001 www \
 	&& useradd -d $HTTPD_PREFIX -s /bin/sh -g www -m -u 1001 httpd \
@@ -27,8 +30,6 @@ RUN : \
 	&& chmod 755 /home/kusanagi \
 	&& apk del --purge .user \
 	&& mkdir /tmp/build \
-	&& CURL_VERSION=8.17.0-r1 \
-	&& OPENSSL_VERSION=3.5.5-r0 \
 	&& APACHE_DIST_URLS=' \
 		https://www.apache.org/dyn/closer.cgi?action=download&filename= \
 		https://www-us.apache.org/dist/  \
@@ -49,8 +50,8 @@ RUN : \
 		gcc \
 		gnupg \
 		libc-dev \
-		curl=$CURL_VERSION \
-		curl-dev=$CURL_VERSION \
+		curl \
+		curl-dev \
 		jansson-dev \
 		libxml2-dev \
 		lua5.3-dev \
@@ -59,8 +60,7 @@ RUN : \
 		mariadb-dev \
 		nghttp2-dev \
 		nghttp2-libs \
-		openssl=$OPENSSL_VERSION \
-		openssl-dev=$OPENSSL_VERSION \
+		openssl-dev \
 		brotli \
 		brotli-dev \
 		pcre2-dev \
