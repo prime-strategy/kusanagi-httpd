@@ -20,6 +20,8 @@ WORKDIR /tmp
 RUN : \
 	&& apk upgrade --no-cache \
 		busybox \
+		musl \
+		musl-utils \
 		zlib\
 		openssl \
 	&& apk add --no-cache --virtual .user shadow \
