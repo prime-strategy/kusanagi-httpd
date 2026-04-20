@@ -1,11 +1,11 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM golang:1.26.1-alpine3.23 AS build-go
+FROM --platform=$BUILDPLATFORM golang:1.26.2-alpine3.23 AS build-go
 COPY files/httpd_check.go /tmp
 RUN go build /tmp/httpd_check.go
 
-FROM --platform=$BUILDPLATFORM alpine:3.23.3
+FROM --platform=$BUILDPLATFORM alpine:3.23.4
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.66
