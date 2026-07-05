@@ -5,7 +5,7 @@ FROM --platform=$BUILDPLATFORM golang:1.26.4-alpine3.23 AS build-go
 COPY files/httpd_check.go /tmp
 RUN go build /tmp/httpd_check.go
 
-FROM --platform=$BUILDPLATFORM alpine:3.23.4
+FROM --platform=$BUILDPLATFORM alpine:3.23.5
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.68
