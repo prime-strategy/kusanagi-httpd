@@ -1,11 +1,21 @@
 #//----------------------------------------------------------------------------
 #// Apache HTTP Server ( for KUSANAGI Run on Docker )
 #//----------------------------------------------------------------------------
+#// httpd_check is pure Go (no cgo), so it cross-compiles on the native build
+#// platform instead of paying for emulation.
 FROM --platform=$BUILDPLATFORM golang:1.26.7-alpine3.24 AS build-go
+ARG TARGETOS TARGETARCH TARGETVARIANT
 COPY files/httpd_check.go /tmp
-RUN go build /tmp/httpd_check.go
+RUN set -eux; \
+	export CGO_ENABLED=0 GOOS="$TARGETOS" GOARCH="$TARGETARCH"; \
+	if [ "$TARGETARCH" = "arm" ]; then export GOARM="${TARGETVARIANT#v}"; fi; \
+	go build -o /go/httpd_check /tmp/httpd_check.go
 
-FROM --platform=$BUILDPLATFORM alpine:3.24.1
+#// Built once per target platform: httpd is compiled for the target arch, under
+#// emulation when the runner is not native. Do NOT pin this to $BUILDPLATFORM --
+#// that silently ships amd64 binaries under every arch of the manifest list.
+FROM alpine:3.24.1
+ARG TARGETARCH
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
 ENV HTTPD_VERSION=2.4.68
@@ -18,6 +28,19 @@ COPY --from=build-go /go/httpd_check /usr/local/bin/httpd_check
 
 WORKDIR /tmp
 RUN : \
+	`#// LuaJIT has no RISC-V port, so Alpine ships no luajit/luajit-dev on` \
+	`#// riscv64. That target falls back to stock Lua 5.3 for mod_lua.` \
+	&& if [ "$TARGETARCH" = "riscv64" ]; then \
+		luaBuildDeps=''; \
+		luaRunDeps=''; \
+		luaLibs=''; \
+		luaOpts='--enable-lua=static --with-lua=/usr/lua5.3'; \
+	else \
+		luaBuildDeps='luajit-dev'; \
+		luaRunDeps='luajit'; \
+		luaLibs='-lluajit-5.1'; \
+		luaOpts='--enable-lua=static --enable-luajit --with-lua=/usr/lua5.3 --with-luajit=/usr'; \
+	fi \
 	&& apk upgrade --no-cache \
 		busybox \
 		musl \
@@ -57,7 +80,7 @@ RUN : \
 		jansson-dev \
 		libxml2-dev \
 		lua5.3-dev \
-		luajit-dev \
+		$luaBuildDeps \
 		make \
 		mariadb-dev \
 		nghttp2-dev \
@@ -105,13 +128,12 @@ RUN : \
 		&& patch -p1 < /tmp/lua_vmprep.patch \
 		&& ./configure \
 			CFLAGS='-O2 -g -Wimplicit-function-declaration' \
-			LIBS='-lluajit-5.1' \
+			LIBS="$luaLibs" \
 			--enable-modules=all \
 			--enable-mods-shared=all \
 			--enable-proxy-fdpass \
 			--enable-mpms-shared='prefork worker event' \
-			--enable-lua=static \
-			--enable-luajit \
+			$luaOpts \
 			--enable-sed \
 			--enable-http2 \
 			--enable-ssl \
@@ -122,8 +144,6 @@ RUN : \
 			--enable-brotli \
 			--enable-suexec \
 			--with-z=/usr \
-			--with-lua=/usr/lua5.3 \
-			--with-luajit=/usr \
 			--with-brotli=/usr \
 			--with-nghttp2=/usr \
 			--with-ssl=/usr \
@@ -141,7 +161,7 @@ RUN : \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl luajit perl \
+	&& apk add --no-cache --virtual .httpd-rundeps $runDeps openssl $luaRunDeps perl \
 	&& apk del --purge .build-deps \
 	&& mv /tmp/envsubst /usr/bin \
 	&& rm -rf /tmp/build /tmp/httpd /tmp/lua_vmprep.patch \
@@ -159,10 +179,11 @@ COPY files/httpd/conf.modules.d/ /etc/httpd/conf.modules.d/
 COPY files/httpd/modsecurity.d/ /etc/httpd/modsecurity.d
 COPY files/docker-entrypoint.sh /
 
-RUN wget -q -O - https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /tmp \
-    && /tmp/trivy filesystem --skip-files /tmp/trivy --exit-code 1 --no-progress / \
-    && rm /tmp/trivy \
-    && :
+#// The trivy scan used to live here as an in-build RUN. That cannot work once
+#// the image is really cross-built: trivy publishes no riscv64 binary at all,
+#// and on big-endian targets trivy-db (a native-endian bbolt file) fails to
+#// open. The scan now runs natively on the runner against the built image --
+#// see .github/workflows/docker-publish.yml.
 
 EXPOSE 8080
 EXPOSE 8443
