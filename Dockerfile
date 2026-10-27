@@ -3,7 +3,7 @@
 #//----------------------------------------------------------------------------
 #// httpd_check is pure Go (no cgo), so it cross-compiles on the native build
 #// platform instead of paying for emulation.
-FROM --platform=$BUILDPLATFORM golang:1.26.7-alpine3.24 AS build-go
+FROM --platform=$BUILDPLATFORM golang:1.26.10-alpine3.24 AS build-go
 ARG TARGETOS TARGETARCH TARGETVARIANT
 COPY files/httpd_check.go /tmp
 RUN set -eux; \
@@ -14,12 +14,12 @@ RUN set -eux; \
 #// Built once per target platform: httpd is compiled for the target arch, under
 #// emulation when the runner is not native. Do NOT pin this to $BUILDPLATFORM --
 #// that silently ships amd64 binaries under every arch of the manifest list.
-FROM alpine:3.24.1
+FROM alpine:3.24.3
 ARG TARGETARCH
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
-ENV HTTPD_VERSION=2.4.68
-ENV HTTPD_SHA256=68c74d4df38c26bed4dfbdb8f3baf1eb532f3872357becc1bba5d136f6b63c06
+ENV HTTPD_VERSION=2.4.69
+ENV HTTPD_SHA256=c5e6ebc66e349b87d7fc6916ae7cc2a808ed348003de134cf9e9d89d3e2cc73d
 ENV HTTPD_PREFIX=/usr/local/apache2
 ENV PATH=$HTTPD_PREFIX/bin:$PATH
 ENV FQDN=localhost
