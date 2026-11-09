@@ -4,12 +4,12 @@ Apache HTTP Server( for KUSANAGI Runs on Docker )
 
 # Versions (tags)
 
-- 2.4.68-r5
+- 2.4.70-r0
 
 # Image Content
 
-- Alpine:3.24.1
-- httpd-2.4.68
+- Alpine:3.24.3
+- httpd-2.4.70
 
 # Architectures
 
@@ -27,7 +27,7 @@ Images are built and pushed to Docker Hub by GitHub Actions
 Pushing a git tag of the form `X.Y.Z-rN` publishes `primestrategy/kusanagi-httpd:X.Y.Z-rN`:
 
 ```
-git tag 2.4.68-r6 && git push origin 2.4.68-r6
+git tag 2.4.70-r1 && git push origin 2.4.70-r1
 ```
 
 `workflow_dispatch` runs the same build; leave the `tag` input empty for a
