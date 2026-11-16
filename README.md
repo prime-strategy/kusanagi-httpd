@@ -4,17 +4,16 @@ Apache HTTP Server( for KUSANAGI Runs on Docker )
 
 # Versions (tags)
 
-- 2.4.70-r0
+- 2.4.71-r0
 
 # Image Content
 
-- Alpine:3.24.3
-- httpd-2.4.70
+- Alpine:3.24.4
+- httpd-2.4.71
 
 # Architectures
 
-`linux/amd64`, `linux/386`, `linux/arm64/v8`, `linux/arm/v6`, `linux/arm/v7`,
-`linux/riscv64`
+`linux/amd64`, `linux/arm64/v8`, `linux/arm/v6`, `linux/arm/v7`,
 
 `mod_lua` runs on LuaJIT everywhere except `linux/riscv64`, which uses stock
 Lua 5.3 -- LuaJIT has no RISC-V port, so Alpine ships no `luajit` package there.
@@ -27,7 +26,7 @@ Images are built and pushed to Docker Hub by GitHub Actions
 Pushing a git tag of the form `X.Y.Z-rN` publishes `primestrategy/kusanagi-httpd:X.Y.Z-rN`:
 
 ```
-git tag 2.4.70-r1 && git push origin 2.4.70-r1
+git tag 2.4.71-r0 && git push origin 2.4.71-r0
 ```
 
 `workflow_dispatch` runs the same build; leave the `tag` input empty for a
