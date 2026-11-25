@@ -14,7 +14,7 @@ RUN set -eux; \
 #// Built once per target platform: httpd is compiled for the target arch, under
 #// emulation when the runner is not native. Do NOT pin this to $BUILDPLATFORM --
 #// that silently ships amd64 binaries under every arch of the manifest list.
-FROM alpine:3.24.3
+FROM alpine:3.24.4
 ARG TARGETARCH
 LABEL maintainer=kusanagi@prime-strategy.co.jp
 
